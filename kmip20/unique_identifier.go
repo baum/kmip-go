@@ -2,7 +2,7 @@ package kmip20
 
 import (
 	"github.com/ansel1/merry"
-	"github.com/gemalto/kmip-go/ttlv"
+	"github.com/baum/kmip-go/ttlv"
 )
 
 type UniqueIdentifierValue struct {

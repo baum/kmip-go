@@ -6,9 +6,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/gemalto/kmip-go"
-	"github.com/gemalto/kmip-go/kmip14"
-	"github.com/gemalto/kmip-go/ttlv"
+	"github.com/baum/kmip-go"
+	"github.com/baum/kmip-go/kmip14"
+	"github.com/baum/kmip-go/ttlv"
 	"github.com/google/uuid"
 )
 

@@ -25,9 +25,9 @@ import (
 	"time"
 
 	"github.com/ansel1/merry"
+	"github.com/baum/kmip-go/kmip14"
+	"github.com/baum/kmip-go/ttlv"
 	"github.com/gemalto/flume"
-	"github.com/gemalto/kmip-go/kmip14"
-	"github.com/gemalto/kmip-go/ttlv"
 	"github.com/google/uuid"
 )
 

@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/ansel1/merry"
-	"github.com/gemalto/kmip-go/internal/kmiputil"
+	"github.com/baum/kmip-go/internal/kmiputil"
 )
 
 // FormatType formats a byte as a KMIP Type string,

@@ -3,8 +3,8 @@ package kmip
 import (
 	"math/big"
 
-	"github.com/gemalto/kmip-go/kmip14"
-	"github.com/gemalto/kmip-go/ttlv"
+	"github.com/baum/kmip-go/kmip14"
+	"github.com/baum/kmip-go/ttlv"
 )
 
 // 2.1 Base Objects

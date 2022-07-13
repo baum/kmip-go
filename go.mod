@@ -1,4 +1,4 @@
-module github.com/gemalto/kmip-go
+module github.com/baum/kmip-go
 
 go 1.17
 

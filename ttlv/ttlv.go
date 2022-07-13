@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/ansel1/merry"
-	"github.com/gemalto/kmip-go/internal/kmiputil"
+	"github.com/baum/kmip-go/internal/kmiputil"
 )
 
 //nolint:deadcode,varcheck

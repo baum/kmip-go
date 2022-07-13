@@ -3,7 +3,7 @@ package kmip
 import (
 	"math/big"
 
-	"github.com/gemalto/kmip-go/kmip14"
+	"github.com/baum/kmip-go/kmip14"
 )
 
 // 2.2
