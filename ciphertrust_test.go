@@ -22,11 +22,17 @@ import (
 const protocolMajor = 1
 const protocolMinor = 4
 
-/* go test -timeout 30s -run ^TestCypherTrust$ github.com/baum/kmip-go */
-func TestCypherTrust(t *testing.T) {
+/* go test -v -timeout 30s -run ^TestCipherTrust$ github.com/baum/kmip-go */
+func TestCipherTrust(t *testing.T) {
+	//
+	// Connect
+	//
 	conn := Connect("10.0.2.15:5696")
 	defer conn.Close()
 
+	//
+	// DiscoverVersions
+	//
 	respMsg, decoder := Send(conn, kmip14.OperationDiscoverVersions, kmip.DiscoverVersionsRequestPayload{
 		ProtocolVersion: []kmip.ProtocolVersion{
 			{ProtocolVersionMajor: protocolMajor, ProtocolVersionMinor: protocolMinor},
@@ -41,6 +47,9 @@ func TestCypherTrust(t *testing.T) {
 	assert.Equal(t, protocolMajor, pv.ProtocolVersionMajor)
 	assert.Equal(t, protocolMinor, pv.ProtocolVersionMinor)
 
+	//
+	// Register
+	//
 	registerPayload := kmip.RegisterRequestPayload{
 		ObjectType: kmip14.ObjectTypeSymmetricKey,
 		SymmetricKey: &kmip.SymmetricKey{
@@ -57,12 +66,14 @@ func TestCypherTrust(t *testing.T) {
 	registerPayload.TemplateAttribute.Append(kmip14.TagCryptographicUsageMask, kmip14.CryptographicUsageMaskExport)
 	respMsg, decoder = Send(conn, kmip14.OperationRegister, registerPayload)
 	bi = assertRespSuccess(t, respMsg, kmip14.OperationRegister)
-
 	var registerRespPayload kmip.RegisterResponsePayload
 	err = decoder.DecodeValue(&registerRespPayload, bi.ResponsePayload.(ttlv.TTLV))
 	require.NoError(t, err)
 	assert.NotEmpty(t, registerRespPayload.UniqueIdentifier)
 
+	//
+	// Get
+	//
 	respMsg, decoder = Send(conn, kmip14.OperationGet, kmip.GetRequestPayload{
 		UniqueIdentifier: registerRespPayload.UniqueIdentifier,
 	})
@@ -75,6 +86,19 @@ func TestCypherTrust(t *testing.T) {
 	assert.Equal(t, kmip14.ObjectTypeSymmetricKey, getRespPayload.ObjectType)
 	assert.NotNil(t, getRespPayload.SymmetricKey)
 	assert.Equal(t, registerPayload.SymmetricKey, getRespPayload.SymmetricKey)
+
+	//
+	// Destroy
+	//
+	respMsg, decoder = Send(conn, kmip14.OperationDestroy, kmip.DestroyRequestPayload{
+		UniqueIdentifier: registerRespPayload.UniqueIdentifier,
+	})
+	bi = assertRespSuccess(t, respMsg, kmip14.OperationDestroy)
+	var destroyRespPayload kmip.DestroyResponsePayload
+	err = decoder.DecodeValue(&destroyRespPayload, bi.ResponsePayload.(ttlv.TTLV))
+	require.NoError(t, err)
+	assert.NotEmpty(t, destroyRespPayload.UniqueIdentifier)
+	assert.Equal(t, registerRespPayload.UniqueIdentifier, destroyRespPayload.UniqueIdentifier)
 }
 
 func assertRespSuccess(t *testing.T, respMsg kmip.ResponseMessage, operation kmip14.Operation) kmip.ResponseBatchItem {
